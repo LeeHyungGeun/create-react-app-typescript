@@ -31,6 +31,10 @@ const publicUrl = '';
 // Get environment variables to inject into our app.
 const env = getClientEnvironment(publicUrl);
 
+// PostCss
+const postcss = require(paths.postcssPath).postcss || {};
+const postcssPlugins = postcss && postcss.plugins ? postcss.plugins : [];
+
 // This is the development configuration.
 // It is focused on developer experience and fast rebuilds.
 // The production configuration is different and lives in a separate file.
@@ -124,7 +128,7 @@ module.exports = {
       // please link the files into your node_modules/ and let module-resolution kick in.
       // Make sure your source files are compiled, as they will not be processed in any way.
       new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
-      new TsconfigPathsPlugin({configFile: paths.appTsConfig})
+      new TsconfigPathsPlugin({ configFile: paths.appTsConfig }),
     ],
   },
   module: {
@@ -201,6 +205,9 @@ module.exports = {
                         'not ie < 9', // React doesn't support IE8 anyway
                       ],
                       flexbox: 'no-2009',
+                    }),
+                    ...postcssPlugins.map(_path => {
+                      return require(_path);
                     }),
                   ],
                 },

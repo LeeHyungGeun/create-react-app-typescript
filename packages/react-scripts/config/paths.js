@@ -41,8 +41,8 @@ const getPublicUrl = appPackageJson =>
 // like /todos/42/static/js/bundle.7289d.js. We have to know the root.
 function getServedPath(appPackageJson) {
   const publicUrl = getPublicUrl(appPackageJson);
-  const servedUrl = envPublicUrl ||
-    (publicUrl ? url.parse(publicUrl).pathname : '/');
+  const servedUrl =
+    envPublicUrl || (publicUrl ? url.parse(publicUrl).pathname : '/');
   return ensureSlash(servedUrl, true);
 }
 
@@ -62,6 +62,7 @@ module.exports = {
   appTsLint: resolveApp('tslint.json'),
   publicUrl: getPublicUrl(resolveApp('package.json')),
   servedPath: getServedPath(resolveApp('package.json')),
+  postcssPath: resolveApp('package.json'),
 };
 
 // @remove-on-eject-begin
@@ -85,6 +86,7 @@ module.exports = {
   appTsLint: resolveApp('tslint.json'),
   publicUrl: getPublicUrl(resolveApp('package.json')),
   servedPath: getServedPath(resolveApp('package.json')),
+  postcssPath: resolveApp('package.json'),
   // These properties only exist before ejecting:
   ownPath: resolveOwn('.'),
   ownNodeModules: resolveOwn('node_modules'), // This is empty on npm 3
@@ -92,7 +94,8 @@ module.exports = {
 
 const ownPackageJson = require('../package.json');
 const reactScriptsPath = resolveApp(`node_modules/${ownPackageJson.name}`);
-const reactScriptsLinked = fs.existsSync(reactScriptsPath) &&
+const reactScriptsLinked =
+  fs.existsSync(reactScriptsPath) &&
   fs.lstatSync(reactScriptsPath).isSymbolicLink();
 
 // config before publish: we're in ./packages/react-scripts/config/
@@ -117,6 +120,7 @@ if (
     appTsTestConfig: resolveOwn('template/tsconfig.test.json'),
     publicUrl: getPublicUrl(resolveOwn('package.json')),
     servedPath: getServedPath(resolveOwn('package.json')),
+    postcssPath: resolveApp('package.json'),
     // These properties only exist before ejecting:
     ownPath: resolveOwn('.'),
     ownNodeModules: resolveOwn('node_modules'),

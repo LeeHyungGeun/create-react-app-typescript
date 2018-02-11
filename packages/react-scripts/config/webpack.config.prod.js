@@ -37,6 +37,10 @@ const publicUrl = publicPath.slice(0, -1);
 // Get environment variables to inject into our app.
 const env = getClientEnvironment(publicUrl);
 
+// PostCss
+const postcss = require(paths.postcssPath).postcss || {};
+const postcssPlugins = postcss && postcss.plugins ? postcss.plugins : [];
+
 // Assert this just to be safe.
 // Development builds of React are slow and not intended for production.
 if (env.stringified['process.env'].NODE_ENV !== '"production"') {
@@ -130,7 +134,7 @@ module.exports = {
       // please link the files into your node_modules/ and let module-resolution kick in.
       // Make sure your source files are compiled, as they will not be processed in any way.
       new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
-      new TsconfigPathsPlugin({configFile: paths.appTsConfig})
+      new TsconfigPathsPlugin({ configFile: paths.appTsConfig }),
     ],
   },
   module: {
@@ -222,6 +226,9 @@ module.exports = {
                               'not ie < 9', // React doesn't support IE8 anyway
                             ],
                             flexbox: 'no-2009',
+                          }),
+                          ...postcssPlugins.map(_path => {
+                            return require(_path);
                           }),
                         ],
                       },
